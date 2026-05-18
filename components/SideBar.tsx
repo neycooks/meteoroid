@@ -17,9 +17,7 @@ import {
   ChevronsLeft,
   Search,
   X,
-  ExternalLink,
   Download,
-  Star,
 } from 'lucide-react';
 import type { FileNode } from './IDE';
 

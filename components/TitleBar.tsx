@@ -4,23 +4,9 @@ import { useState, useRef, useEffect } from 'react';
 import {
   Code2,
   Search,
-  FileText,
-  FolderTree,
-  GitBranch,
-  Bug,
-  Puzzle,
-  Settings,
-  User,
-  ChevronDown,
-  X,
   Minus,
   Square,
-  PanelLeft,
-  Terminal,
-  LayoutGrid,
-  Type,
-  TypeDecrease,
-  Columns,
+  X,
 } from 'lucide-react';
 
 interface TitleBarProps {
