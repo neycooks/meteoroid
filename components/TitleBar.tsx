@@ -1,6 +1,10 @@
 'use client';
 
-export default function TitleBar() {
+interface TitleBarProps {
+  onCommand: () => void;
+}
+
+export default function TitleBar({ onCommand }: TitleBarProps) {
   return (
     <div
       className="flex h-8 items-center justify-between select-none"
@@ -8,18 +12,9 @@ export default function TitleBar() {
     >
       <div className="flex items-center gap-3 px-3">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path
-            d="M13.5 4.5L8 1.5L2.5 4.5L8 7.5L13.5 4.5Z"
-            fill="var(--accent)"
-          />
-          <path
-            d="M2.5 4.5V11.5L8 14.5V7.5L2.5 4.5Z"
-            fill="var(--text-secondary)"
-          />
-          <path
-            d="M8 7.5V14.5L13.5 11.5V4.5L8 7.5Z"
-            fill="var(--text-primary)"
-          />
+          <path d="M13.5 4.5L8 1.5L2.5 4.5L8 7.5L13.5 4.5Z" fill="var(--accent)" />
+          <path d="M2.5 4.5V11.5L8 14.5V7.5L2.5 4.5Z" fill="var(--text-secondary)" />
+          <path d="M8 7.5V14.5L13.5 11.5V4.5L8 7.5Z" fill="var(--text-primary)" />
         </svg>
         <span className="text-xs text-[var(--text-secondary)]">Meteoroid</span>
         <div className="flex gap-4 ml-4">
@@ -33,7 +28,15 @@ export default function TitleBar() {
         </div>
       </div>
       <div className="flex-1 flex justify-center">
-        <span className="text-xs text-[var(--text-muted)]">Meteoroid - Code Editor</span>
+        <button
+          onClick={onCommand}
+          className="flex items-center gap-2 px-3 py-0.5 text-xs text-[var(--text-muted)] hover:bg-[var(--bg-hover)] rounded"
+        >
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M11.5 7a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zm-.82 4.74a6 6 0 111.06-1.06l3.04 3.04a.75.75 0 11-1.06 1.06l-3.04-3.04z"/>
+          </svg>
+          <span>Meteoroid - Code Editor</span>
+        </button>
       </div>
       <div className="flex items-center">
         <button className="w-12 h-8 flex items-center justify-center hover:bg-[var(--bg-hover)] text-[var(--text-secondary)]">

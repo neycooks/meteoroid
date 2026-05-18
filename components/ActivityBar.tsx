@@ -1,6 +1,6 @@
 'use client';
 
-import { FiFiles, FiSearch, FiGitBranch, FiBug, FiPackage, FiSettings, FiAccount } from 'react-icons/fi';
+import { useState } from 'react';
 
 interface ActivityBarProps {
   activeActivity: string;
@@ -9,6 +9,55 @@ interface ActivityBarProps {
   setSidebarVisible: (visible: boolean) => void;
 }
 
+const Icons = {
+  Explorer: () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <path d="M3 3h7l2 2h9v14H3V3z"/>
+      <path d="M3 9h18"/>
+    </svg>
+  ),
+  Search: () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <circle cx="11" cy="11" r="7"/>
+      <path d="M16 16l5 5"/>
+    </svg>
+  ),
+  Git: () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <circle cx="12" cy="6" r="3"/>
+      <circle cx="12" cy="18" r="3"/>
+      <path d="M12 9v6"/>
+      <path d="M12 9c0 2-3 2-3 4"/>
+    </svg>
+  ),
+  Debug: () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <path d="M12 3L4 9v12h16V9l-8-6z"/>
+      <path d="M9 12l6 4-6 4v-8z" fill="currentColor"/>
+    </svg>
+  ),
+  Extensions: () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <rect x="3" y="3" width="7" height="7" rx="1"/>
+      <rect x="14" y="3" width="7" height="7" rx="1"/>
+      <rect x="3" y="14" width="7" height="7" rx="1"/>
+      <rect x="14" y="14" width="7" height="7" rx="1"/>
+    </svg>
+  ),
+  Account: () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <circle cx="12" cy="8" r="4"/>
+      <path d="M4 21c0-4 4-7 8-7s8 3 8 7"/>
+    </svg>
+  ),
+  Settings: () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M12 1v3M12 20v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M1 12h3M20 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/>
+    </svg>
+  ),
+};
+
 export default function ActivityBar({
   activeActivity,
   setActiveActivity,
@@ -16,11 +65,11 @@ export default function ActivityBar({
   setSidebarVisible,
 }: ActivityBarProps) {
   const activities = [
-    { id: 'explorer', icon: FiFiles, label: 'Explorer' },
-    { id: 'search', icon: FiSearch, label: 'Search' },
-    { id: 'git', icon: FiGitBranch, label: 'Source Control' },
-    { id: 'debug', icon: FiBug, label: 'Debug' },
-    { id: 'extensions', icon: FiPackage, label: 'Extensions' },
+    { id: 'explorer', icon: Icons.Explorer, label: 'Explorer' },
+    { id: 'search', icon: Icons.Search, label: 'Search' },
+    { id: 'git', icon: Icons.Git, label: 'Source Control' },
+    { id: 'debug', icon: Icons.Debug, label: 'Debug' },
+    { id: 'extensions', icon: Icons.Extensions, label: 'Extensions' },
   ];
 
   const toggleActivity = (id: string) => {
@@ -48,7 +97,7 @@ export default function ActivityBar({
           }`}
           title={label}
         >
-          <Icon size={24} />
+          <Icon />
         </button>
       ))}
       <div className="flex-1" />
@@ -56,13 +105,13 @@ export default function ActivityBar({
         className="w-12 h-12 flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
         title="Accounts"
       >
-        <FiAccount size={24} />
+        <Icons.Account />
       </button>
       <button
         className="w-12 h-12 flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
         title="Settings"
       >
-        <FiSettings size={24} />
+        <Icons.Settings />
       </button>
     </div>
   );
