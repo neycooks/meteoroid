@@ -1,0 +1,32 @@
+{
+	"name": "Visual Studio Code",
+	"short_name": "Code",
+	"start_url": "/",
+	"lang": "en-US",
+	"display": "standalone",
+	"display_override": ["window-controls-overlay"],
+	"icons": [
+		{
+			"src": "/static/stable/code-192.png",
+			"type": "image/png",
+			"sizes": "192x192"
+		},
+		{
+			"src": "/static/stable/code-192-maskable.png",
+			"type": "image/png",
+			"sizes": "192x192",
+			"purpose": "maskable"
+		},
+		{
+			"src": "/static/stable/code-512.png",
+			"type": "image/png",
+			"sizes": "512x512"
+		},
+		{
+			"src": "/static/stable/code-512-maskable.png",
+			"type": "image/png",
+			"sizes": "512x512",
+			"purpose": "maskable"
+		}
+	]
+}
