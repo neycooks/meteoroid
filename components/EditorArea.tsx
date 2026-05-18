@@ -12,8 +12,12 @@ interface EditorAreaProps {
   onEditorChange: (value: string | undefined) => void;
   splitEditor: boolean;
   secondActiveFile: FileNode | null;
+  setSecondActiveFile: (file: FileNode) => void;
   secondOpenFiles: FileNode[];
+  setSecondOpenFiles: (files: FileNode[]) => void;
   secondFileContents: Record<string, string>;
+  onSecondEditorChange: (value: string | undefined) => void;
+  closeSecondFile: (path: string) => void;
   minimapEnabled: boolean;
   wordWrap: boolean;
   fontSize: number;
@@ -201,8 +205,12 @@ export default function EditorArea({
   onEditorChange,
   splitEditor,
   secondActiveFile,
+  setSecondActiveFile,
   secondOpenFiles,
+  setSecondOpenFiles,
   secondFileContents,
+  onSecondEditorChange,
+  closeSecondFile,
   minimapEnabled,
   wordWrap,
   fontSize,
@@ -290,34 +298,34 @@ export default function EditorArea({
               <TabBar
                 files={secondOpenFiles}
                 activeFile={secondActiveFile}
-                setActiveFile={setSecondActiveFile as any}
-                closeFile={() => {}}
+                setActiveFile={setSecondActiveFile}
+                closeFile={closeSecondFile}
                 fileContents={secondFileContents}
-                onEditorChange={() => {}}
+                onEditorChange={onSecondEditorChange}
               />
               <Breadcrumbs file={secondActiveFile} />
+              <div className="flex-1 overflow-hidden">
+                {secondActiveFile && (
+                  <MonacoEditor
+                    file={secondActiveFile}
+                    content={secondFileContents[secondActiveFile.path] || secondActiveFile.content || ''}
+                    onChange={onSecondEditorChange}
+                    minimapEnabled={minimapEnabled}
+                    wordWrap={wordWrap}
+                    fontSize={fontSize}
+                    tabSize={tabSize}
+                  />
+                )}
+              </div>
             </>
           ) : (
             <div
-              className="flex items-center justify-center text-xs text-[var(--text-muted)] p-4"
-              style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)' }}
+              className="flex-1 flex items-center justify-center text-xs text-[var(--text-muted)]"
+              style={{ background: 'var(--editor-bg)' }}
             >
-              Split Editor
+              Open a file in the split editor
             </div>
           )}
-          <div className="flex-1 overflow-hidden">
-            {secondActiveFile && (
-              <MonacoEditor
-                file={secondActiveFile}
-                content={secondFileContents[secondActiveFile.path] || secondActiveFile.content || ''}
-                onChange={() => {}}
-                minimapEnabled={minimapEnabled}
-                wordWrap={wordWrap}
-                fontSize={fontSize}
-                tabSize={tabSize}
-              />
-            )}
-          </div>
         </div>
       )}
     </div>

@@ -443,6 +443,26 @@ export default function IDE() {
     [activeFile]
   );
 
+  const closeSecondFile = useCallback(
+    (path: string) => {
+      const newOpenFiles = secondOpenFiles.filter((f) => f.path !== path);
+      setSecondOpenFiles(newOpenFiles);
+      if (secondActiveFile?.path === path) {
+        setSecondActiveFile(newOpenFiles.length > 0 ? newOpenFiles[newOpenFiles.length - 1] : null);
+      }
+    },
+    [secondOpenFiles, secondActiveFile]
+  );
+
+  const handleSecondEditorChange = useCallback(
+    (value: string | undefined) => {
+      if (secondActiveFile && value !== undefined) {
+        setSecondFileContents((prev) => ({ ...prev, [secondActiveFile.path]: value }));
+      }
+    },
+    [secondActiveFile]
+  );
+
   const handleCommand = useCallback(
     (command: string) => {
       switch (command) {
@@ -519,8 +539,12 @@ export default function IDE() {
             onEditorChange={handleEditorChange}
             splitEditor={splitEditor}
             secondActiveFile={secondActiveFile}
+            setSecondActiveFile={setSecondActiveFile}
             secondOpenFiles={secondOpenFiles}
+            setSecondOpenFiles={setSecondOpenFiles}
             secondFileContents={secondFileContents}
+            onSecondEditorChange={handleSecondEditorChange}
+            closeSecondFile={closeSecondFile}
             minimapEnabled={minimapEnabled}
             wordWrap={wordWrap}
             fontSize={fontSize}
