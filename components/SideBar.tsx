@@ -14,7 +14,7 @@ import {
   Plus,
   FolderPlus,
   RefreshCw,
-  Collapse,
+  PanelLeftClose,
   Search,
   X,
   ExternalLink,
@@ -217,7 +217,7 @@ export default function SideBar({ files, openFile, activeFile, activeActivity }:
                     <RefreshCw size={12} />
                   </button>
                   <button className="w-5 h-5 flex items-center justify-center hover:bg-[var(--bg-hover)] rounded transition-colors" title="Collapse">
-                    <Collapse size={14} />
+                    <PanelLeftClose size={14} />
                   </button>
                 </div>
               </div>
