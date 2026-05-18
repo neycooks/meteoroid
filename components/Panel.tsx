@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { X, Maximize2, Minimize2, Terminal, AlertCircle, SquareTerminal, Bug } from 'lucide-react';
+import { X, Maximize2, Minimize2, Terminal, AlertCircle, Bug, Monitor } from 'lucide-react';
 
 interface PanelProps {
   visible: boolean;
@@ -99,7 +99,7 @@ export default function Panel({ visible, setPanelVisible }: PanelProps) {
 
   const tabs = [
     { id: 'problems', icon: AlertCircle, label: 'Problems', count: 0 },
-    { id: 'output', icon: SquareTerminal, label: 'Output' },
+    { id: 'output', icon: Monitor, label: 'Output' },
     { id: 'terminal', icon: Terminal, label: 'Terminal' },
     { id: 'debug', icon: Bug, label: 'Debug Console' },
   ];
