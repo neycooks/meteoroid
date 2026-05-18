@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import TitleBar from './TitleBar';
 import ActivityBar from './ActivityBar';
 import SideBar from './SideBar';
@@ -125,12 +125,6 @@ export function throttle<T extends (...args: any[]) => any>(
       setTimeout(() => (inThrottle = false), limit);
     }
   };
-}
-
-export function classNames(
-  ...classes: (string | boolean | undefined)[]
-): string {
-  return classes.filter(Boolean).join(' ');
 }`,
           },
           {
@@ -196,9 +190,9 @@ export const api = {
             path: '/src/styles/globals.css',
             language: 'css',
             content: `:root {
-  --primary: #007acc;
-  --background: #1e1e1e;
-  --foreground: #cccccc;
+  --primary: #0078d4;
+  --background: #0d0d0d;
+  --foreground: #e0e0e0;
 }
 
 * {
@@ -211,26 +205,6 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: var(--background);
   color: var(--foreground);
-}
-
-.app {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 0;
-  border-bottom: 1px solid #333;
-}
-
-.header nav a {
-  color: var(--foreground);
-  text-decoration: none;
-  margin-left: 1rem;
 }`,
           },
         ],
@@ -262,101 +236,28 @@ root.render(
     type: 'file',
     path: '/package.json',
     language: 'json',
-    content: `{
-  "name": "meteoroid-app",
-  "version": "1.0.0",
-  "private": true,
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "typescript": "^5.2.2"
-  },
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  }
-}`,
+    content: `{\n  "name": "meteoroid-app",\n  "version": "1.0.0",\n  "private": true,\n  "dependencies": {\n    "react": "^18.2.0",\n    "react-dom": "^18.2.0",\n    "typescript": "^5.2.2"\n  },\n  "scripts": {\n    "dev": "next dev",\n    "build": "next build",\n    "start": "next start"\n  }\n}`,
   },
   {
     name: 'tsconfig.json',
     type: 'file',
     path: '/tsconfig.json',
     language: 'json',
-    content: `{
-  "compilerOptions": {
-    "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
-  },
-  "include": ["src"]
-}`,
+    content: `{\n  "compilerOptions": {\n    "target": "es5",\n    "lib": ["dom", "dom.iterable", "esnext"],\n    "allowJs": true,\n    "skipLibCheck": true,\n    "esModuleInterop": true,\n    "strict": true,\n    "jsx": "react-jsx"\n  },\n  "include": ["src"]\n}`,
   },
   {
     name: 'README.md',
     type: 'file',
     path: '/README.md',
     language: 'markdown',
-    content: `# Meteoroid App
-
-A modern web application built with React and TypeScript.
-
-## Getting Started
-
-\`\`\`bash
-npm install
-npm run dev
-\`\`\`
-
-## Features
-
-- React 18 with TypeScript
-- Modern UI components
-- Hot module replacement
-- ESLint integration
-
-## Project Structure
-
-\`\`\`
-src/
-├── components/    # React components
-├── utils/         # Utility functions
-├── styles/        # Global styles
-└── index.tsx      # Entry point
-\`\`\``,
+    content: `# Meteoroid App\n\nA modern web application built with React and TypeScript.\n\n## Getting Started\n\n\`\`\`bash\nnpm install\nnpm run dev\n\`\`\``,
   },
   {
     name: '.gitignore',
     type: 'file',
     path: '/.gitignore',
     language: 'plaintext',
-    content: `node_modules/
-.next/
-dist/
-.env.local
-.env*.local
-*.log
-.DS_Store
-coverage/
-.vscode/
-.idea/`,
+    content: `node_modules/\n.next/\ndist/\n.env.local\n*.log\n.DS_Store`,
   },
 ];
 
@@ -377,7 +278,7 @@ export default function IDE() {
   const [wordWrap, setWordWrap] = useState(false);
   const [fontSize, setFontSize] = useState(14);
   const [tabSize, setTabSize] = useState(2);
-  const [showSettings, setShowSettings] = useState(false);
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -385,7 +286,7 @@ export default function IDE() {
         e.preventDefault();
         setCommandPaletteOpen(true);
       }
-      if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'p' && !e.shiftKey) {
         e.preventDefault();
         setCommandPaletteOpen(true);
       }
@@ -401,8 +302,12 @@ export default function IDE() {
         e.preventDefault();
         setSplitEditor((v) => !v);
       }
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+      }
       if (e.key === 'Escape') {
         setCommandPaletteOpen(false);
+        setActiveMenu(null);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -487,9 +392,6 @@ export default function IDE() {
         case 'decrease-font':
           setFontSize((v) => Math.max(v - 2, 8));
           break;
-        case 'toggle-settings':
-          setShowSettings((v) => !v);
-          break;
       }
       setCommandPaletteOpen(false);
     },
@@ -504,16 +406,20 @@ export default function IDE() {
     { id: 'split-editor', label: 'View: Split Editor', keybinding: 'Ctrl+\\' },
     { id: 'increase-font', label: 'Editor: Increase Font Size' },
     { id: 'decrease-font', label: 'Editor: Decrease Font Size' },
-    { id: 'toggle-settings', label: 'Preferences: Open Settings' },
     { id: 'format', label: 'Format Document', keybinding: 'Shift+Alt+F' },
     { id: 'save', label: 'File: Save', keybinding: 'Ctrl+S' },
     { id: 'find', label: 'Find in File', keybinding: 'Ctrl+F' },
     { id: 'replace', label: 'Replace in File', keybinding: 'Ctrl+H' },
+    { id: 'command-palette', label: 'Show All Commands', keybinding: 'Ctrl+Shift+P' },
   ];
 
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-[var(--bg-primary)]">
-      <TitleBar onCommand={() => setCommandPaletteOpen(true)} />
+      <TitleBar
+        activeMenu={activeMenu}
+        setActiveMenu={setActiveMenu}
+        onCommand={() => setCommandPaletteOpen(true)}
+      />
       <div className="flex flex-1 overflow-hidden">
         <ActivityBar
           activeActivity={activeActivity}
